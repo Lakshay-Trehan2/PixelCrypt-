@@ -1,0 +1,95 @@
+import { useState, useRef } from 'react';
+import { getImageData, encryptImage, decryptImage } from '../utils/imageProcessing';
+
+export function useImageEncryption() {
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [processedImage, setProcessedImage] = useState<string | null>(null);
+  const [isEncrypted, setIsEncrypted] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [key, setKey] = useState<number>(123);
+  const [rotation, setRotation] = useState<number>(0);
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const img = await getImageData(file);
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.drawImage(img, 0, 0);
+      setOriginalImage(canvas.toDataURL());
+      setProcessedImage(canvas.toDataURL());
+      setIsEncrypted(false);
+      setRotation(0);
+    } catch (error) {
+      console.error('Error loading image:', error);
+    }
+  };
+
+  const handleEncrypt = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    encryptImage(ctx, canvas, key);
+    setProcessedImage(canvas.toDataURL());
+    setIsEncrypted(true);
+  };
+
+  const handleDecrypt = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    decryptImage(ctx, canvas, key);
+    setProcessedImage(canvas.toDataURL());
+    setIsEncrypted(false);
+  };
+
+  const handleRotate = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const newRotation = (rotation + 90) % 360;
+    setRotation(newRotation);
+
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = newRotation % 180 === 0 ? img.width : img.height;
+      canvas.height = newRotation % 180 === 0 ? img.height : img.width;
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((newRotation * Math.PI) / 180);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      ctx.restore();
+      setProcessedImage(canvas.toDataURL());
+    };
+    img.src = processedImage || '';
+  };
+
+  return {
+    originalImage,
+    processedImage,
+    isEncrypted,
+    canvasRef,
+    key,
+    setKey,
+    rotation,
+    handleImageUpload,
+    handleEncrypt,
+    handleDecrypt,
+    handleRotate,
+  };
+}
+
