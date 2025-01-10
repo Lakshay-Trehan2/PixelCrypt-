@@ -1,4 +1,4 @@
-## PixelCrypt: Image Encryption Tool
+# PixelCrypt: Image Encryption Tool
 
  
 
