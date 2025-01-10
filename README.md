@@ -108,10 +108,10 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 Lakshay Trehan 
 
-**Feedback**
+# Feedback
 
 We would love to hear your thoughts and suggestions! Feel free to create an issue or contribute to the project.
 
-**Disclaimer**
+# Disclaimer
 
 PixelCrypt is a tool for personal and educational purposes. Please ensure compliance with local laws and regulations when using encryption tools.
