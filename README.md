@@ -32,7 +32,7 @@ Ensure you have a modern web browser installed (Google Chrome, Firefox, etc.).
 
 Download or clone the PixelCrypt repository:
 
-`git clone https://github.com/your-username/PixelCrypt.git`
+`git clone https://github.com/Lakshay-Trehan2/PRODIGY_CS_02.git`
 
 **Installation**
 
